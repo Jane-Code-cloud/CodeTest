@@ -5,6 +5,7 @@ import java.util.List;
 
 
 import com.cyy.order.bean.Order;
+import com.cyy.order.feign.ProductFeignClient;
 import com.cyy.order.service.OrderService;
 import com.cyy.product.bean.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,14 @@ public class OrderServiceImpl implements OrderService {
     DiscoveryClient discoveryClient;
     @Autowired
     LoadBalancerClient loadBalancerClient;
+//    @Autowired
+//    RestTemplate restTemplate;
+
     @Autowired
-    RestTemplate restTemplate;
+    ProductFeignClient productFeignClient;
     @Override
     public Order createOrder(Long productId, Long user) {
-        Product product = getProductFromRemote(productId);
+        Product product = productFeignClient.getProductById(productId);
         Order order = new Order();
         order.setId(0L);
         order.setTotalAmount(product.getPrice().multiply(new BigDecimal(product.getNum())));
@@ -51,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
         //第三版 注解
         String url = "http://service-product/product/"+productId;
         log.info("远程请求路径url:{}",url);
-        Product product = restTemplate.getForObject(url, Product.class);
+        Product product = productFeignClient.getProductById(productId);
         return product;
     }
 }

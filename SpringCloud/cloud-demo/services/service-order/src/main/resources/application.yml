@@ -4,6 +4,7 @@ server:
 spring:
   profiles:
     active: dev
+    include: feign #会激活application-feign.yml（Feign 特定配置）
   application:
     name: service-order
   cloud:
@@ -13,6 +14,9 @@ spring:
         namespace: ${spring.profiles.active:public}
         import-check:
           enabled: false # 必须写，因为上面的是默认配置，默认没有配置
+logging:
+  level:
+    com.cyy.order.feign: debug #feign客户端所在的包名com/cyy/order/feign
 ---
 spring:
   config:

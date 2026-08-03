@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            logger-level: full
+            connect-timeout: 3000 #毫秒
+            read-timeout: 5000
+          service-product:
+            logger-level: full
+            connect-timeout: 3000
+            read-timeout: 5000
+#            request-interceptors:
+#              - com.example.feign.interceptor.FeignRequestInterceptor
+
+
+feign:
+  sentinel:
+    enabled: true
