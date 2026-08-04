@@ -13,6 +13,11 @@ spring:
             read-timeout: 5000
 #            request-interceptors:
 #              - com.example.feign.interceptor.FeignRequestInterceptor
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true #项目一启动自动连上控制台
+      web-context-unify: false
 
 
 feign:

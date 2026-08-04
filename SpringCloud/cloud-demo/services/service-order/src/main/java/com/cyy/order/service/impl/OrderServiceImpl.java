@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.cyy.order.bean.Order;
 import com.cyy.order.feign.ProductFeignClient;
 import com.cyy.order.service.OrderService;
@@ -29,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ProductFeignClient productFeignClient;
     @Override
+    @SentinelResource(value="createOrder",blockHandler = "createOrderBlockHandler")
     public Order createOrder(Long productId, Long user) {
         Product product = productFeignClient.getProductById(productId);
         Order order = new Order();
@@ -38,6 +41,20 @@ public class OrderServiceImpl implements OrderService {
         order.setNickName("cyy");
         order.setAddress("翻斗花园");
         order.setProductList(Arrays.asList(product));
+
+
+
+        return order;
+    }
+
+    public Order createOrderBlockHandler(Long productId, Long user, BlockException e) {
+        Order order = new Order();
+        order.setId(0L);
+        order.setTotalAmount(new BigDecimal(0));
+        order.setUserId(user);
+        order.setNickName("未知用户");
+        order.setAddress("位置地址");
+        order.setProductList(null);
 
 
 
