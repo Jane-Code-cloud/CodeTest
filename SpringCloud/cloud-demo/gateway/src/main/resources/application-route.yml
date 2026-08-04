@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    gateway:
+      routes: # 有序的，前面有就不会匹配后面的
+        - id: order-route #全局唯一
+          uri: lb://service-order # lb是loadbalance的简写
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - RewritePath=/api/order/(?<segment>.*), /${segment}  #(?<segment>.*)封装在segment中
+            - OnceToken=token,jwt
+
+        - id: product-route
+          uri: lb://service-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/product/(?<segment>.*), /${segment}
+
+
+        - id: test
+          uri: https://cn.bing.com/
+          predicates:
+            - Path=/search
+            - name: Query #一定要都满足
+              args:
+                param: q
+                regexp: haha
+            - name: Vip
+              args:
+                param: user
+                value: cyy
+      default-filters:
+        - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有路径
+            allowedOrigins: "*" #允许所有的跨域
+            allowedMethods: "*" #允许所有的方法
+            allowed-headers: "*" #允许所有的请求头
