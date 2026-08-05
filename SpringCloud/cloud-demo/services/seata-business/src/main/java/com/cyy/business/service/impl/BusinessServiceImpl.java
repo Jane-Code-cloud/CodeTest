@@ -3,7 +3,7 @@ package com.cyy.business.service.impl;
 import com.cyy.business.feign.OrderFeignClient;
 import com.cyy.business.feign.StorageFeignClient;
 import com.cyy.business.service.BusinessService;
-import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
